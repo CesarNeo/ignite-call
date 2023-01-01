@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Heading, MultiStep, Text, TextInput } from '@ignite-ui/react'
+import { useRouter } from 'next/router'
 import { ArrowRight } from 'phosphor-react'
-import { FunctionComponent } from 'react'
+import { FunctionComponent, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Container, Form, FormError, Header } from './styles'
@@ -25,15 +26,24 @@ type RegisterFormProps = z.infer<typeof registerFormSchema>
 const Register: FunctionComponent = () => {
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormProps>({
     resolver: zodResolver(registerFormSchema),
   })
 
+  const router = useRouter()
+
   const handleRegister = async (data: RegisterFormProps) => {
     console.log(data)
   }
+
+  useEffect(() => {
+    if (router.query?.username) {
+      setValue('username', router.query.username as string)
+    }
+  }, [router.query?.username, setValue])
 
   return (
     <Container>
