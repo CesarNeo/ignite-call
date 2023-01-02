@@ -45,6 +45,8 @@ const Register: FunctionComponent = () => {
       }
 
       await api.post('/users', body)
+
+      await router.push('/register/connect-calendar')
     } catch (error) {
       if (error instanceof AxiosError && error.response?.data?.error) {
         alert(error.response.data.error)
