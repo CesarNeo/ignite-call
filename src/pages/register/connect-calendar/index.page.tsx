@@ -1,4 +1,5 @@
 import { Button, Heading, MultiStep, Text } from '@ignite-ui/react'
+import { signIn, useSession } from 'next-auth/react'
 import { ArrowRight } from 'phosphor-react'
 import { FunctionComponent } from 'react'
 // import { api } from '../../lib/axios'
@@ -6,6 +7,7 @@ import { Container, Header } from '../styles'
 import { ConnectBox, ConnectItem } from './styles'
 
 const Register: FunctionComponent = () => {
+  const session = useSession()
   // const handleRegister = async ({ name, username }: RegisterFormProps) => {}
 
   return (
@@ -25,7 +27,12 @@ const Register: FunctionComponent = () => {
         <ConnectItem>
           <Text>Google Calendar</Text>
 
-          <Button type="button" variant="secondary" size="sm">
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            onClick={() => signIn('google')}
+          >
             Conectar <ArrowRight />
           </Button>
         </ConnectItem>
