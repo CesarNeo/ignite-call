@@ -9,6 +9,7 @@ import { AuthError, ConnectBox, ConnectItem } from './styles'
 
 const Register: FunctionComponent = () => {
   const session = useSession()
+  console.log('🚀 ~ file: index.page.tsx:12 ~ session', session)
   const router = useRouter()
 
   const hasAuthError = router.query.error === 'permissions'
