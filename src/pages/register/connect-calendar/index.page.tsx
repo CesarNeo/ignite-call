@@ -3,13 +3,11 @@ import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { ArrowRight, Check } from 'phosphor-react'
 import { FunctionComponent } from 'react'
-// import { api } from '../../lib/axios'
 import { Container, Header } from '../styles'
 import { AuthError, ConnectBox, ConnectItem } from './styles'
 
-const Register: FunctionComponent = () => {
+const ConnectCalendar: FunctionComponent = () => {
   const session = useSession()
-  console.log('🚀 ~ file: index.page.tsx:12 ~ session', session)
   const router = useRouter()
 
   const hasAuthError = router.query.error === 'permissions'
@@ -67,4 +65,4 @@ const Register: FunctionComponent = () => {
   )
 }
 
-export default Register
+export default ConnectCalendar
