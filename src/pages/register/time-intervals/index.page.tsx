@@ -8,7 +8,7 @@ import {
 } from '@ignite-ui/react'
 import { ArrowRight } from 'phosphor-react'
 import { FunctionComponent } from 'react'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { getWeekDays } from '../../../utils/get-week-days'
 import { Container, Header } from '../styles'
@@ -26,6 +26,7 @@ const TimeIntervals: FunctionComponent = () => {
   const {
     register,
     handleSubmit,
+    watch,
     control,
     formState: { isSubmitting, errors },
   } = useForm({
@@ -33,43 +34,43 @@ const TimeIntervals: FunctionComponent = () => {
       intervals: [
         {
           weekday: 0,
-          enable: false,
+          enabled: false,
           startTime: '08:00',
           endTime: '18:00',
         },
         {
           weekday: 1,
-          enable: true,
+          enabled: true,
           startTime: '08:00',
           endTime: '18:00',
         },
         {
           weekday: 2,
-          enable: true,
+          enabled: true,
           startTime: '08:00',
           endTime: '18:00',
         },
         {
           weekday: 3,
-          enable: true,
+          enabled: true,
           startTime: '08:00',
           endTime: '18:00',
         },
         {
           weekday: 4,
-          enable: true,
+          enabled: true,
           startTime: '08:00',
           endTime: '18:00',
         },
         {
           weekday: 5,
-          enable: true,
+          enabled: true,
           startTime: '08:00',
           endTime: '18:00',
         },
         {
           weekday: 6,
-          enable: false,
+          enabled: false,
           startTime: '08:00',
           endTime: '18:00',
         },
@@ -83,6 +84,7 @@ const TimeIntervals: FunctionComponent = () => {
   })
 
   const weekdays = getWeekDays()
+  const intervals = watch('intervals')
 
   const handleSetTimeIntervals = async (data: any) => {}
 
@@ -104,7 +106,18 @@ const TimeIntervals: FunctionComponent = () => {
           {fields.map((field, index) => (
             <IntervalItem key={field.id}>
               <IntervalDay>
-                <Checkbox />
+                <Controller
+                  name={`intervals.${index}.enabled`}
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      onCheckedChange={(checked) =>
+                        field.onChange(checked === true)
+                      }
+                      checked={field.value}
+                    />
+                  )}
+                />
                 <Text>{weekdays[field.weekday]}</Text>
               </IntervalDay>
               <IntervalInputs>
@@ -112,12 +125,14 @@ const TimeIntervals: FunctionComponent = () => {
                   size="sm"
                   type="time"
                   step={60}
+                  disabled={!intervals[index].enabled}
                   {...register(`intervals.${index}.startTime`)}
                 />
                 <TextInput
                   size="sm"
                   type="time"
                   step={60}
+                  disabled={!intervals[index].enabled}
                   {...register(`intervals.${index}.endTime`)}
                 />
               </IntervalInputs>
