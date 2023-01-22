@@ -1,6 +1,7 @@
 import { Avatar, Heading, Text } from '@ignite-ui/react'
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import { prisma } from '../../../lib/prisma'
+import { ScheduleForm } from './ScheduleForm'
 import { Container, UserHeader } from './styles'
 
 interface ScheduleProps {
@@ -20,6 +21,8 @@ const Schedule: NextPage<ScheduleProps> = ({ user }) => {
         <Heading>{user.name}</Heading>
         <Text>{user.bio}</Text>
       </UserHeader>
+
+      <ScheduleForm />
     </Container>
   )
 }
