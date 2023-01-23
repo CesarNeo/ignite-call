@@ -1,5 +1,7 @@
+import dayjs from 'dayjs'
 import { NextComponentType } from 'next'
 import { CaretLeft, CaretRight } from 'phosphor-react'
+import { useState } from 'react'
 import { getWeekDays } from '../../utils/get-week-days'
 import {
   CalendarActions,
@@ -13,19 +15,40 @@ import {
 const SHORT_WEEK_DAYS = getWeekDays({ short: true })
 
 export const Calendar: NextComponentType = () => {
+  const [currentDate, setCurrentDate] = useState(() => dayjs().set('date', 1))
+
+  const currentMonth = currentDate.format('MMMM')
+  const currentYear = currentDate.format('YYYY')
+
+  const handlePreviousMonth = () => {
+    const previousMonthDate = currentDate.subtract(1, 'month')
+
+    setCurrentDate(previousMonthDate)
+  }
+
+  const handleNextMonth = () => {
+    const nextMonthDate = currentDate.add(1, 'month')
+
+    setCurrentDate(nextMonthDate)
+  }
+
   return (
     <CalendarContainer>
       <CalendarHeader>
         <CalendarTitle>
-          Dezembro <span>2023</span>
+          {currentMonth} <span>{currentYear}</span>
         </CalendarTitle>
 
         <CalendarActions>
-          <button type="button">
+          <button
+            type="button"
+            onClick={handlePreviousMonth}
+            title="Previous month"
+          >
             <CaretLeft />
           </button>
 
-          <button type="button">
+          <button type="button" onClick={handleNextMonth} title="Next month">
             <CaretRight />
           </button>
         </CalendarActions>
