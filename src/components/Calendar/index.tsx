@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { NextComponentType } from 'next'
 import { CaretLeft, CaretRight } from 'phosphor-react'
-import { useMemo, useState } from 'react'
+import { FunctionComponent, useMemo, useState } from 'react'
 import { getWeekDays } from '../../utils/get-week-days'
 import {
   CalendarActions,
@@ -23,8 +23,15 @@ interface CalendarWeek {
 }
 
 type CalendarWeeks = CalendarWeek[]
+interface CalendarProps {
+  selectedDate: Date | null
+  onDateSelected: (date: Date) => void
+}
 
-export const Calendar: NextComponentType = () => {
+export const Calendar: FunctionComponent<CalendarProps> = ({
+  onDateSelected,
+  selectedDate,
+}) => {
   const [currentDate, setCurrentDate] = useState(() => dayjs().set('date', 1))
 
   const currentMonth = currentDate.format('MMMM')
@@ -59,7 +66,7 @@ export const Calendar: NextComponentType = () => {
         return { day, disabled: true }
       }),
       ...daysInMonthArray.map((day) => {
-        return { day, disabled: false }
+        return { day, disabled: day.endOf('day').isBefore(new Date()) }
       }),
       ...nextMonthFillArray.map((day) => {
         return { day, disabled: true }
@@ -131,7 +138,10 @@ export const Calendar: NextComponentType = () => {
             <tr key={week}>
               {days.map(({ day, disabled }) => (
                 <td key={day.toString()}>
-                  <CalendarDay disabled={disabled}>
+                  <CalendarDay
+                    onClick={() => onDateSelected(day.toDate())}
+                    disabled={disabled}
+                  >
                     {day.get('date')}
                   </CalendarDay>
                 </td>
