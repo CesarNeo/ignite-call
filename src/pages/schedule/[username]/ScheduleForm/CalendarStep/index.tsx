@@ -12,9 +12,14 @@ import {
   TimePickerList,
 } from './styles'
 
+interface Availability {
+  possibleTimes: number[]
+  availableTimes: number[]
+}
+
 export const CalendarStep: NextComponentType = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [availability, setAvailability] = useState<Date[]>([])
+  const [availability, setAvailability] = useState<Availability | null>(null)
 
   const router = useRouter()
 
@@ -38,7 +43,7 @@ export const CalendarStep: NextComponentType = () => {
         },
       })
 
-      console.log(response.data)
+      setAvailability(response.data)
     }
     getAvailability()
   }, [selectedDate, username])
@@ -54,24 +59,14 @@ export const CalendarStep: NextComponentType = () => {
           </TimePickerHeader>
 
           <TimePickerList>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>08:00h</TimePickerItem>
+            {availability?.possibleTimes.map((time) => (
+              <TimePickerItem
+                key={time}
+                disabled={!availability.availableTimes.includes(time)}
+              >
+                {String(time).padStart(2, '0')}:00h
+              </TimePickerItem>
+            ))}
           </TimePickerList>
         </TimePicker>
       )}
