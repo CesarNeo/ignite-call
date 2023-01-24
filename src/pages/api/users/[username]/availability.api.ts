@@ -1,8 +1,8 @@
 import dayjs from 'dayjs'
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiHandler } from 'next'
 import { prisma } from '../../../../lib/prisma'
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler: NextApiHandler = async (req, res) => {
   if (req.method !== 'GET') {
     return res.status(405).end()
   }
