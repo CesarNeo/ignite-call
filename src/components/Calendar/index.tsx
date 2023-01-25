@@ -33,6 +33,7 @@ interface CalendarProps {
 
 interface BlockedDates {
   blockedWeekDays: number[]
+  blockedDates: number[]
 }
 
 export const Calendar: FunctionComponent<CalendarProps> = ({
@@ -68,7 +69,7 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
         {
           params: {
             year: currentDate.get('year'),
-            month: currentDate.get('month'),
+            month: currentDate.get('month') + 1,
           },
         },
       )
@@ -114,7 +115,8 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
           day,
           disabled:
             day.endOf('day').isBefore(new Date()) ||
-            blockedDates.blockedWeekDays.includes(day.get('day')),
+            blockedDates.blockedWeekDays.includes(day.get('day')) ||
+            blockedDates.blockedDates.includes(day.get('date')),
         }
       }),
       ...nextMonthFillArray.map((day) => {
