@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
-import { NextComponentType } from 'next'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { FunctionComponent, useState } from 'react'
 import { Calendar } from '../../../../../components/Calendar'
 import { api } from '../../../../../lib/axios'
 import {
@@ -18,7 +17,13 @@ interface Availability {
   availableTimes: number[]
 }
 
-export const CalendarStep: NextComponentType = () => {
+interface CalendarStepProps {
+  onSelectDateTime: (date: Date) => void
+}
+
+export const CalendarStep: FunctionComponent<CalendarStepProps> = ({
+  onSelectDateTime,
+}) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
 
   const router = useRouter()
@@ -51,6 +56,12 @@ export const CalendarStep: NextComponentType = () => {
     },
   )
 
+  const handleSelectTime = (time: number) => {
+    const dateWithTime = dayjs(selectedDate).set('hour', time).startOf('hour')
+
+    onSelectDateTime(dateWithTime.toDate())
+  }
+
   return (
     <Container isTimePickerOpen={isDateSelected}>
       <Calendar selectedDate={selectedDate} onDateSelected={setSelectedDate} />
@@ -66,6 +77,7 @@ export const CalendarStep: NextComponentType = () => {
               <TimePickerItem
                 key={time}
                 disabled={!availability.availableTimes.includes(time)}
+                onClick={() => handleSelectTime(time)}
               >
                 {String(time).padStart(2, '0')}:00h
               </TimePickerItem>

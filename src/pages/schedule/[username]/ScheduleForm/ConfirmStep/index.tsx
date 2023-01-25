@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Text, TextArea, TextInput } from '@ignite-ui/react'
-import { NextComponentType } from 'next'
+import dayjs from 'dayjs'
 import { CalendarBlank, Clock } from 'phosphor-react'
+import { FunctionComponent } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { ConfirmForm, FormActions, FormError, FormHeader } from './styles'
@@ -14,7 +15,15 @@ const confirmFormSchema = z.object({
 
 type ConfirmFormData = z.infer<typeof confirmFormSchema>
 
-export const ConfirmStep: NextComponentType = () => {
+interface ConfirmStepProps {
+  schedulingDate: Date
+  onCancelCorfirmation: () => void
+}
+
+export const ConfirmStep: FunctionComponent<ConfirmStepProps> = ({
+  schedulingDate,
+  onCancelCorfirmation,
+}) => {
   const {
     handleSubmit,
     register,
@@ -23,6 +32,9 @@ export const ConfirmStep: NextComponentType = () => {
     resolver: zodResolver(confirmFormSchema),
   })
 
+  const fullDate = dayjs(schedulingDate).format('DD[ de ]MMMM[ de ]YYYY')
+  const time = dayjs(schedulingDate).format('HH:mm[h]')
+
   const handleConfirmScheduling = (data: ConfirmFormData) => {}
 
   return (
@@ -30,11 +42,11 @@ export const ConfirmStep: NextComponentType = () => {
       <FormHeader>
         <Text>
           <CalendarBlank />
-          22 de abril de 2021
+          {fullDate}
         </Text>
         <Text>
           <Clock />
-          10:00h
+          {time}
         </Text>
       </FormHeader>
 
@@ -64,7 +76,7 @@ export const ConfirmStep: NextComponentType = () => {
       </label>
 
       <FormActions>
-        <Button type="button" variant="tertiary">
+        <Button type="button" variant="tertiary" onClick={onCancelCorfirmation}>
           Cancelar
         </Button>
         <Button type="submit" disabled={isSubmitting}>
