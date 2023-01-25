@@ -68,9 +68,15 @@ const handler: NextApiHandler = async (req, res) => {
   })
 
   const availableTimes = possibleTimes.filter((possibleTime) => {
-    return !blockedTimes.some(
+    const isTimeBlocked = blockedTimes.some(
       (blockedTime) => blockedTime.date.getHours() === possibleTime,
     )
+
+    const isTimeInPast = referenceDate
+      .set('hour', possibleTime)
+      .isBefore(new Date())
+
+    return !isTimeBlocked && !isTimeInPast
   })
 
   return res.json({ possibleTimes, availableTimes })
